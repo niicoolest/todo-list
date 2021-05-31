@@ -1,1 +1,7 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
+
+body {
+    background-image: url('../images/background.jpg');
+    height: 95vh;
+    width: 95vw;
+}
