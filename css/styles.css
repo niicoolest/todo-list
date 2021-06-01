@@ -4,6 +4,7 @@ body {
     background-image: url('../images/background.jpg');
     height: 95vh;
     width: 95vw;
+    font-family: lato;
 }
 
 .todo-container {
@@ -24,15 +25,12 @@ body {
 .contents {
     display: inline-block;
     width: 90%;
-    height: 70vh;
+    height: 80vh;
     background: #DDA0DD;
-    opacity: 90%;
+    opacity: 95%;
+    box-shadow: 10px 10px 5px grey;
 }
 
 .title-bar {
-    background: white;
-}
-
-.opaque-80 {
-    opacity: 80%;
+    background: #9370DB;
 }
