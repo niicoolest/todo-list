@@ -5,3 +5,34 @@ body {
     height: 95vh;
     width: 95vw;
 }
+
+.todo-container {
+    margin: auto;
+    margin-top: 5vh;
+    width: 80vw;
+    height: 80vh;
+}
+
+.todo-list-logo {
+    margin-left: 5px;
+}
+
+.font-color-black {
+    color: black;
+}
+
+.contents {
+    display: inline-block;
+    width: 90%;
+    height: 70vh;
+    background: #DDA0DD;
+    opacity: 90%;
+}
+
+.title-bar {
+    background: white;
+}
+
+.opaque-80 {
+    opacity: 80%;
+}
