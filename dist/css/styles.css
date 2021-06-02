@@ -24,13 +24,61 @@ body {
 
 .contents {
     display: inline-block;
-    width: 90%;
+    width: 100%;
     height: 80vh;
-    background: #DDA0DD;
+    background: #603F8B;
     opacity: 95%;
     box-shadow: 10px 10px 5px grey;
 }
 
 .title-bar {
-    background: #9370DB;
+    background: #A16AE8;
+    margin-bottom: 0px !important;
+}
+
+.todo-list-body {
+    height: calc(80vh - 3.8rem);
+}
+
+.side-bar {
+    float:left;
+    height: 100%;
+    width: 25%;
+    background: #A16AE8;
+}
+
+.todo-list-container {
+    height: 100%;
+}
+
+.side-bar-item {
+    font-size: 4vmin;
+    font-family: lato;
+    padding: .25em;
+}
+
+.project {
+    font-size: 2vmin !important;
+    padding: 0;
+}
+
+.add-button {
+    float: right;
+    margin-top: 7px;
+    margin-right: 7px;
+}
+
+.todo-list-panel {
+    font-family: lato;
+    font-size: 1.2em;
+}
+
+.todo-item {
+    display: flow-root !important;
+    color: white;
+}
+
+.todo-item:hover {
+    color: black;
+    background-color: white;
 }
