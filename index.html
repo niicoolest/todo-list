@@ -94,9 +94,94 @@
                       <button class="button"><i class="fa fa-trash"></i></button>
                     </div>
                   </div>
-                  
-                 
                 </nav>
+              </div>
+              <div id="new-todo-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                  <form class="box">
+                    <h2 class="title">Add New Todo</h2>
+                      <div class="field">
+                        <label class="label">Title</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="Title">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Details</label>
+                        <div class="control">
+                          <textarea class="textarea" placeholder="Details"></textarea>
+                        </div>
+                      </div>
+    
+                      <div class="field">
+                        <label class="label">Project</label>
+                        <div class="control">
+                          <div class="select">
+                            <select>
+                              <option>Select dropdown</option>
+                              <option>With options</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="field">
+                        <label class="label">Due Date</label>
+                        <div class="control">
+                          <input class="input" type="date" placeholder="Due Date">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Priority</label>
+                        <div class="control">
+                          <div class="buttons has-addons">
+                            <button class="button is-success is-selected">High</button>
+                            <button class="button">Normal</button>
+                            <button class="button">Low</button>
+                          </div>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link">Submit</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light">Cancel</button>
+                        </div>
+                      </div>
+                  </form>
+
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+              </div>
+              <div id="new-project-modal" class="modal is-active">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                  <form class="box">
+                    <h2 class="title">Add New Project</h2>
+                      <div class="field">
+                        <label class="label">Project Name</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="Project Name">
+                        </div>
+                      </div>
+                      <br>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link">Submit</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light">Cancel</button>
+                        </div>
+                      </div>
+                  </form>
+
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
               </div>
             </div>
           </div>
