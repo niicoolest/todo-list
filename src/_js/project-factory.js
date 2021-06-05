@@ -1,18 +1,21 @@
-const Project = (function() {
+import {storage} from './storage';
+import {id} from './util';
+
+const ProjectFactory = (function() {
 
     function createNewProject(projectName) {
         let projProps = {
             projectName: projectName,
-            id: id
+            id: id()
         }
-        return new TodoProject(projProps);
+
+        storage.addNewProjectToStorage(new TodoProject(projProps));
     }
 
     class TodoProject {
         constructor(props) {
             this.projectName = props.projectName;
             this.id = props.id;
-            this.todoList = [];
         }
     }
 
@@ -21,3 +24,5 @@ const Project = (function() {
     }
 
 })();
+
+export {ProjectFactory}

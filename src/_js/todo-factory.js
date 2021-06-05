@@ -1,14 +1,17 @@
+import {storage} from './storage';
+
 const TodoFactory = (function() {
 
-    function createTodo(title, description, duedate, priority) {
+    function createTodo(projectName, title, description, duedate, priority) {
         let todoProps = {
+            projectName: projectName,
             title: title,
             description: description,
             duedate: duedate,
             priority: priority
         }
 
-        return new Todo(todoProps);
+        storage.addNewToDoToStorage(new Todo(todoProps));
     }
 
     class Todo {
@@ -17,6 +20,7 @@ const TodoFactory = (function() {
             this.description = props.description;
             this.duedate = props.duedate;
             this.priority = props.priority;
+            this.projectName = props.projectName
         }
     }
 
@@ -25,3 +29,5 @@ const TodoFactory = (function() {
     }
 
 })();
+
+export {TodoFactory}

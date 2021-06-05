@@ -99,19 +99,19 @@
               <div id="new-todo-modal" class="modal">
                 <div class="modal-background"></div>
                 <div class="modal-content">
-                  <form class="box">
+                  <form class="box" id="todo-form">
                     <h2 class="title">Add New Todo</h2>
                       <div class="field">
                         <label class="label">Title</label>
                         <div class="control">
-                          <input class="input" type="text" placeholder="Title">
+                          <input class="input" type="text" placeholder="Title" id="title">
                         </div>
                       </div>
                       
                       <div class="field">
                         <label class="label">Details</label>
                         <div class="control">
-                          <textarea class="textarea" placeholder="Details"></textarea>
+                          <textarea class="textarea" placeholder="Details" id="details"></textarea>
                         </div>
                       </div>
     
@@ -119,7 +119,7 @@
                         <label class="label">Project</label>
                         <div class="control">
                           <div class="select">
-                            <select>
+                            <select id="project">
                               <option>Select dropdown</option>
                               <option>With options</option>
                             </select>
@@ -130,27 +130,38 @@
                       <div class="field">
                         <label class="label">Due Date</label>
                         <div class="control">
-                          <input class="input" type="date" placeholder="Due Date">
+                          <input class="input" type="date" placeholder="Due Date" id="duedate">
                         </div>
                       </div>
                       
                       <div class="field">
                         <label class="label">Priority</label>
                         <div class="control">
-                          <div class="buttons has-addons">
-                            <button class="button is-success is-selected">High</button>
-                            <button class="button">Normal</button>
-                            <button class="button">Low</button>
+                          <div class="buttons has-addons" id="priority">
+                            <button class="button is-success is-selected priority-option" 
+                                  type="button">
+                              High
+                            </button>
+                            <button class="button priority-option" type="button">
+                              Normal
+                            </button>
+                            <button class="button priority-option" type="button">
+                              Low
+                            </button>
                           </div>
                         </div>
                       </div>
                       <br>
                       <div class="field is-grouped">
                         <div class="control">
-                          <button class="button is-link">Submit</button>
+                          <button class="button is-link" id="submit-create-todo" type="button">
+                            Submit
+                          </button>
                         </div>
                         <div class="control">
-                          <button class="button is-link is-light">Cancel</button>
+                          <button class="button is-link is-light" id="cancel-create-todo">
+                            Cancel
+                          </button>
                         </div>
                       </div>
                   </form>
@@ -162,21 +173,25 @@
               <div id="new-project-modal" class="modal">
                 <div class="modal-background"></div>
                 <div class="modal-content">
-                  <form class="box">
+                  <form class="box" id="project-form">
                     <h2 class="title">Add New Project</h2>
                       <div class="field">
                         <label class="label">Project Name</label>
                         <div class="control">
-                          <input class="input" type="text" placeholder="Project Name">
+                          <input class="input" type="text" placeholder="Project Name" id="project-name">
                         </div>
                       </div>
                       <br>
                       <div class="field is-grouped">
                         <div class="control">
-                          <button class="button is-link">Submit</button>
+                          <button class="button is-link" type="button" id="submit-create-project">
+                            Submit
+                          </button>
                         </div>
                         <div class="control">
-                          <button class="button is-link is-light">Cancel</button>
+                          <button class="button is-link is-light" id="cancel-create-project">
+                            Cancel
+                          </button>
                         </div>
                       </div>
                   </form>
