@@ -5,8 +5,9 @@ const DisplayController = (function() {
     function addNewProject() {
         let projectName = document.getElementById('project-name').value;
 
-        console.log(projectName);
         ProjectFactory.createNewProject(projectName);
+        removeActiveClass('new-project-modal');
+        init();
     }
 
     function addNewTask() {
@@ -25,11 +26,71 @@ const DisplayController = (function() {
         console.log(title, projectName, description, dueDate, chosenPrio);
         TodoFactory.createTodo(projectName,
             title, description, dueDate, chosenPrio);
+        removeActiveClass('new-todo-modal');
+        init();
 
     }
 
-    function getNewTodoListInputs() {
+    function displayProjectList() {
+        let projects = ProjectFactory.getProjects();
+        let projectListElem = document.getElementById('project-list');
+        let selectProject = document.getElementById('project');
+        selectProject.appendChild(createProjectOption('Home'));
+        addListenerToHomeProject();
+
+        projects.forEach((item) => {
+            projectListElem.appendChild(createProjectItem(item));
+            selectProject.appendChild(createProjectOption(item['projectName']));
+        });
         
+    }
+
+    function createProjectOption(projectName) {
+        let projectOption = document.createElement('option');
+        projectOption.innerText = projectName;
+        projectOption.value = projectName;
+
+        return projectOption;
+    }
+
+    function addListenerToHomeProject() {
+        let homeProj = document.getElementById('home-project');
+        let homeProjAnchor = document.getElementById('home-project-anchor');
+        addListenerToProjectItem(homeProj, 'Home', homeProjAnchor);
+    }
+
+    function resetActiveProject(newActiveProject) {
+        let activeProjects = document.getElementById('menu-list')
+            .getElementsByClassName('is-active');
+        
+        for(let activeProj of activeProjects) {
+            activeProj.classList.remove('is-active');
+        }
+
+        newActiveProject.classList.add('is-active');
+        console.log(newActiveProject.classList);
+    }
+
+    function createProjectItem(project) {
+        let projectElem = document.createElement('li');
+        let anchor = document.createElement('a');
+        projectElem.className = 'project';
+        projectElem.id = project['id'];
+        anchor.innerText = project['projectName'];
+        projectElem.appendChild(anchor);
+
+        addListenerToProjectItem(projectElem, project['projectName'], 
+            anchor);
+        return projectElem;
+    }
+
+    function addListenerToProjectItem(projectElem, projectName, anchor) {
+        projectElem.addEventListener('click', function() {
+            resetTodoContainer();
+            displayIndividualTodo(projectName);
+            resetActiveProject(anchor);
+        });
+            
     }
 
     function createNewToDo() {
@@ -42,6 +103,11 @@ const DisplayController = (function() {
         projectModal.classList.add('is-active');
     }
 
+    function removeActiveClass(elementId) {
+        let modal = document.getElementById(elementId);
+        modal.classList.remove('is-active');
+    }
+
     function addListeners() {
         addListenerToCreateNewButton();
         addListenerToCreateProjectButton();
@@ -50,6 +116,7 @@ const DisplayController = (function() {
         addListenerToCreateNewToDoSubmitBtn();
         addListenerToCreateNewProjectSubmitBtn();
         addListenerToPriorities();
+        addListenerToDisplayModalCloseBtn();
     }
 
     function addListenerToCreateNewButton() {
@@ -79,11 +146,13 @@ const DisplayController = (function() {
     function addListenerToCreateNewToDoSubmitBtn() {
         let submitBtn = document.getElementById('submit-create-todo');
         submitBtn.addEventListener('click', addNewTask);
+        init();
     }
 
     function addListenerToCreateNewProjectSubmitBtn() {
         let submitBtn = document.getElementById('submit-create-project');
         submitBtn.addEventListener('click', addNewProject);
+        init();
     }
 
     function addListenerToPriorities() {
@@ -123,8 +192,144 @@ const DisplayController = (function() {
 
     }
 
+    function displayIndividualTodo(projectName) {
+        let todos = TodoFactory.getTodosOfAProject(projectName);
+        
+        let parentBlock = document.getElementById('parent-todo-container');
+        todos.forEach(todo => {
+            parentBlock.appendChild(createTodoElement(todo['title'], 
+                todo['priority'], todo['id']));
+        });
+    }
+
+    function createTodoElement(title, priority, id) {
+        let todoItemPanel = document.createElement('div');
+        todoItemPanel.setAttribute('class', 'panel-block todo-item');
+        todoItemPanel.id = id;
+
+        if(priority == "High") {
+            todoItemPanel.classList.add('todo-item-green');
+        } else if (priority == "Normal") {
+            todoItemPanel.classList.add('todo-item-blue');
+        } else if(priority == "Low") {
+            todoItemPanel.classList.add('todo-item-yellow');
+        }
+
+        let inputCheckBox = document.createElement('input');
+        inputCheckBox.setAttribute('type', 'checkbox');
+
+        let labelItem = document.createElement('label');
+
+        let todoTitleElem = document.createElement('span');
+        todoTitleElem.innerText = title;
+        labelItem.appendChild(inputCheckBox);
+        labelItem.appendChild(todoTitleElem);
+        
+
+        let buttonGroup = document.createElement('div');
+        buttonGroup.setAttribute('class', 'field is-grouped add-button buttons are-small');
+        
+        let eyeButton = createDetailsButton(id);
+        let editButton = createEditButtonItem('fa fa-edit');
+        let trashButton = createEditButtonItem('fa fa-trash');
+
+        buttonGroup.appendChild(eyeButton);
+        buttonGroup.appendChild(editButton);
+        buttonGroup.appendChild(trashButton);
+
+        todoItemPanel.appendChild(labelItem);
+        todoItemPanel.appendChild(buttonGroup);
+
+        return todoItemPanel;
+    }
+
+    function createEditButtonItem(iconClass) {
+        let btn = document.createElement('button');
+        btn.className = 'button';
+        btn.setAttribute('type', 'button');
+
+        let icon = document.createElement('i');
+        icon.setAttribute('class', iconClass);
+        btn.appendChild(icon);
+
+        return btn;
+    }
+
+    function createDetailsButton(todoId) {
+        let btn = document.createElement('button');
+        btn.className = 'button';
+        btn.setAttribute('type', 'button');
+
+        let icon = document.createElement('i');
+        icon.setAttribute('class', 'fa fa-eye');
+        btn.appendChild(icon);
+
+        let todo = TodoFactory.getTodoDetails(todoId);
+        btn.addEventListener('click', function() {
+            openDetailModal(todo);
+        });
+
+        return btn;
+    }
+
+    function openDetailModal(todo) {
+        let sectionDetails = document.getElementById('section-details');
+        sectionDetails.textContent = '';
+        let p1 = document.createElement('p');
+        p1.innerText = `Title: ${todo['title']}`;
+        let p2 = document.createElement('p');
+        p2.innerText = `Details: ${todo['description']}`;
+        let p3 = document.createElement('p');
+        p3.innerText = `Due Date: ${todo['duedate']}`;
+        let p4 = document.createElement('p');
+        p4.innerText = `Priority: ${todo['priority']}`;
+        let p5 = document.createElement('p');
+        p5.innerText = `Project Name: ${todo['projectName']}`;
+
+        sectionDetails.appendChild(p1);
+        sectionDetails.appendChild(p2);
+        sectionDetails.appendChild(p3);
+        sectionDetails.appendChild(p4);
+        sectionDetails.appendChild(p5);
+
+        console.log(todo);
+        let detailModal = document.getElementById('details-modal');
+        detailModal.classList.add('is-active');
+    }
+
+    function addListenerToDisplayModalCloseBtn() {
+        let btn = document.getElementById('detail-modal-close-btn');
+        btn.addEventListener('click', function() {
+            let detailModal = document.getElementById('details-modal');
+            detailModal.classList.remove('is-active');
+            let sectionDetails = document.getElementById('section-details');
+            sectionDetails.textContent = '';
+        });
+    }
+
+    function resetDisplay() {
+        let projectListElem = document.getElementById('project-list');
+        let selectProject = document.getElementById('project');
+       
+        projectListElem.textContent = '';
+        selectProject.textContent = '';
+        resetTodoContainer();
+    }
+
+    function resetTodoContainer() {
+        let parentBlock = document.getElementById('parent-todo-container');
+        parentBlock.textContent = '';
+    }
+
+    function init() {
+        resetDisplay();
+        displayProjectList();
+        displayIndividualTodo('Home');
+    }
+
     return {
         addListeners,
+        init,
         createNewToDo,
         createNewProject,
     }

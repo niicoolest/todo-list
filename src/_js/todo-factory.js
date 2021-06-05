@@ -1,4 +1,5 @@
 import {storage} from './storage';
+import { id } from './util';
 
 const TodoFactory = (function() {
 
@@ -8,10 +9,19 @@ const TodoFactory = (function() {
             title: title,
             description: description,
             duedate: duedate,
-            priority: priority
+            priority: priority,
+            id: id()
         }
 
         storage.addNewToDoToStorage(new Todo(todoProps));
+    }
+
+    function getTodosOfAProject(projectName) {
+        return storage.getTodoItemsOfAProject(projectName);
+    }
+
+    function getTodoDetails(todoId) {
+        return storage.getTodoItemById(todoId);
     }
 
     class Todo {
@@ -20,12 +30,15 @@ const TodoFactory = (function() {
             this.description = props.description;
             this.duedate = props.duedate;
             this.priority = props.priority;
-            this.projectName = props.projectName
+            this.projectName = props.projectName;
+            this.id = props.id;
         }
     }
 
     return {
-        createTodo
+        createTodo,
+        getTodosOfAProject,
+        getTodoDetails
     }
 
 })();

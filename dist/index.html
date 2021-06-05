@@ -39,9 +39,9 @@
             <div class="todo-list-body">
               <div class="side-bar">
                 <aside class="menu">
-                  <ul class="menu-list">
-                    <li>
-                      <a class="is-active">
+                  <ul class="menu-list" id="menu-list">
+                    <li id="home-project">
+                      <a class="is-active" id="home-project-anchor">
                         <span class="icon-text side-bar-item">
                           <span class="icon">
                             <i class="fa fa-home"></i>
@@ -59,41 +59,14 @@
                           <span>Projects</span>
                         </span>
                       </a>
-                      <ul>
-                        <li class="project"><a>Members</a></li>
-                        <li class="project"><a>Plugins</a></li>
-                        <li class="project"><a>Add a member</a></li>
+                      <ul id="project-list">
                       </ul>
                     </li>
                   </ul>
                 </aside>
               </div>
               <div class="todo-list-container">
-                <nav class="panel todo-list-panel">
-                 
-                  <div class="panel-block todo-item">
-                    <label >
-                      <input type="checkbox">
-                      remember me
-                    </label>
-                    <div class="field is-grouped add-button buttons are-small">
-                      <button class="button"><i class="fa fa-eye"></i></button>
-                      <button class="button"><i class="fa fa-edit"></i></button>
-                      <button class="button"><i class="fa fa-trash"></i></button>
-                    </div>
-                  </div>
-
-                  <div class="panel-block todo-item">
-                    <label >
-                      <input type="checkbox">
-                      remember me
-                    </label>
-                    <div class="field is-grouped add-button buttons are-small">
-                      <button class="button"><i class="fa fa-eye"></i></button>
-                      <button class="button"><i class="fa fa-edit"></i></button>
-                      <button class="button"><i class="fa fa-trash"></i></button>
-                    </div>
-                  </div>
+                <nav class="panel todo-list-panel" id="parent-todo-container">
                 </nav>
               </div>
               <div id="new-todo-modal" class="modal">
@@ -111,7 +84,8 @@
                       <div class="field">
                         <label class="label">Details</label>
                         <div class="control">
-                          <textarea class="textarea" placeholder="Details" id="details"></textarea>
+                          <textarea class="textarea" placeholder="Details" id="details">
+                          </textarea>
                         </div>
                       </div>
     
@@ -120,8 +94,7 @@
                         <div class="control">
                           <div class="select">
                             <select id="project">
-                              <option>Select dropdown</option>
-                              <option>With options</option>
+                              <option value="Home">Home</option>
                             </select>
                           </div>
                         </div>
@@ -199,6 +172,85 @@
                 </div>
                 <button class="modal-close is-large" aria-label="close"></button>
               </div>
+
+              <div class="modal" id="details-modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Details</p>
+                    <button class="delete" aria-label="close" 
+                            id="detail-modal-close-btn">
+                    </button>
+                  </header>
+                  <section class="modal-card-body" id="section-details">
+                  </section>
+                </div>
+              </div>
+
+
+              <div id="edit-todo-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                  <form class="box" id="edit-todo-form">
+                    <h2 class="title">Edit Todo</h2>
+                      <div class="field">
+                        <label class="label">Title</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="Title" id="edit-title">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Details</label>
+                        <div class="control">
+                          <textarea class="textarea" placeholder="Details" id="edit-details">
+                          </textarea>
+                        </div>
+                      </div>
+    
+                      <div class="field">
+                        <label class="label">Due Date</label>
+                        <div class="control">
+                          <input class="input" type="date" placeholder="Due Date" id="edit-duedate">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Priority</label>
+                        <div class="control">
+                          <div class="buttons has-addons" id="edit-priority">
+                            <button class="button is-success is-selected priority-option" 
+                                  type="button">
+                              High
+                            </button>
+                            <button class="button priority-option" type="button">
+                              Normal
+                            </button>
+                            <button class="button priority-option" type="button">
+                              Low
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link" id="submit-edit-todo" type="button">
+                            Submit
+                          </button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light" id="cancel-edit-todo">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                  </form>
+
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+              </div>
+
             </div>
           </div>
         </div>

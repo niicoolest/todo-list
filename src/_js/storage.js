@@ -26,11 +26,33 @@ const storage = (() => {
         storage.setItem('projects', JSON.stringify(storageProjects));
     }
 
+    function getProjectItems() {
+        return JSON.parse(storage.getItem('projects'));
+    }
+
+    function getTodoItemsOfAProject(project) {
+        let todos = JSON.parse(storage.getItem('todos'));
+        return todos.filter(todo => todo['projectName'] == project);
+    }
+
+    function getTodoItemById(todoId) {
+        let todos = JSON.parse(storage.getItem('todos'));
+        let todoInSearch = todos.filter(todo => todo['id'] == todoId);
+        if(todoInSearch.length == 1) {
+            return todoInSearch[0];
+        }
+
+        return null;
+    }
+
     init();
 
     return {
         addNewToDoToStorage,
-        addNewProjectToStorage
+        addNewProjectToStorage,
+        getProjectItems,
+        getTodoItemsOfAProject,
+        getTodoItemById
     }
 
 })();

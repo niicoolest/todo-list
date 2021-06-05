@@ -12,6 +12,10 @@ const ProjectFactory = (function() {
         storage.addNewProjectToStorage(new TodoProject(projProps));
     }
 
+    function getProjects() {
+        return storage.getProjectItems();
+    }
+
     class TodoProject {
         constructor(props) {
             this.projectName = props.projectName;
@@ -20,7 +24,8 @@ const ProjectFactory = (function() {
     }
 
     return {
-        createNewProject
+        createNewProject,
+        getProjects
     }
 
 })();
