@@ -75,7 +75,18 @@ body {
 
 .todo-item {
     display: flow-root !important;
-    color: white;
+}
+
+.todo-item-yellow {
+    background: #ffdd57;
+}
+
+.todo-item-green {
+    background:  #48c774;
+}
+
+.todo-item-blue {
+    background:  #3298dc;
 }
 
 .todo-item:hover {
