@@ -45,6 +45,14 @@ const storage = (() => {
         return null;
     }
 
+    function deleteTodo(todoId) {
+        let todos = JSON.parse(storage.getItem('todos'));
+        console.log(todoId);
+        console.log(todos);
+        let newTodoList = todos.filter(todo => todo['id'] != todoId);
+        storage.setItem('todos', JSON.stringify(newTodoList));
+    }
+
     init();
 
     return {
@@ -52,7 +60,8 @@ const storage = (() => {
         addNewProjectToStorage,
         getProjectItems,
         getTodoItemsOfAProject,
-        getTodoItemById
+        getTodoItemById,
+        deleteTodo
     }
 
 })();

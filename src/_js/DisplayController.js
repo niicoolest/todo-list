@@ -117,6 +117,7 @@ const DisplayController = (function() {
         addListenerToCreateNewProjectSubmitBtn();
         addListenerToPriorities();
         addListenerToDisplayModalCloseBtn();
+        addListenerToCloseDelete();
     }
 
     function addListenerToCreateNewButton() {
@@ -198,11 +199,11 @@ const DisplayController = (function() {
         let parentBlock = document.getElementById('parent-todo-container');
         todos.forEach(todo => {
             parentBlock.appendChild(createTodoElement(todo['title'], 
-                todo['priority'], todo['id']));
+                todo['priority'], todo['id'], todo['duedate']));
         });
     }
 
-    function createTodoElement(title, priority, id) {
+    function createTodoElement(title, priority, id, dueDate) {
         let todoItemPanel = document.createElement('div');
         todoItemPanel.setAttribute('class', 'panel-block todo-item');
         todoItemPanel.id = id;
@@ -221,7 +222,7 @@ const DisplayController = (function() {
         let labelItem = document.createElement('label');
 
         let todoTitleElem = document.createElement('span');
-        todoTitleElem.innerText = title;
+        todoTitleElem.innerText = `${title} due at ${dueDate}`;
         labelItem.appendChild(inputCheckBox);
         labelItem.appendChild(todoTitleElem);
         
@@ -231,7 +232,7 @@ const DisplayController = (function() {
         
         let eyeButton = createDetailsButton(id);
         let editButton = createEditButtonItem('fa fa-edit');
-        let trashButton = createEditButtonItem('fa fa-trash');
+        let trashButton = createDeleteTodoBtn(id);
 
         buttonGroup.appendChild(eyeButton);
         buttonGroup.appendChild(editButton);
@@ -255,6 +256,25 @@ const DisplayController = (function() {
         return btn;
     }
 
+
+    function createDeleteTodoBtn(todoId) {
+        let btn = document.createElement('button');
+        btn.className = 'button';
+        btn.setAttribute('type', 'button');
+
+        let icon = document.createElement('i');
+        icon.setAttribute('class', 'fa fa-trash');
+        btn.appendChild(icon);
+
+        console.log('heyo');
+        btn.addEventListener('click', function() {
+            openDeleteModal();
+            addListenerToDeleteTodo(todoId);
+        });
+
+        return btn;
+    }
+
     function createDetailsButton(todoId) {
         let btn = document.createElement('button');
         btn.className = 'button';
@@ -270,6 +290,34 @@ const DisplayController = (function() {
         });
 
         return btn;
+    }
+
+    function openDeleteModal() {
+        console.log('i came here')
+        let deleteModal = document.getElementById('delete-todo-modal');
+        deleteModal.classList.add('is-active');
+    }
+
+    function addListenerToDeleteTodo(todoId) {
+        let deleteTodoBtn = document.getElementById('delete-todo-modal-btn');
+        deleteTodoBtn.removeEventListener('click', function() {deleteTodo(todoId)});
+        deleteTodoBtn.addEventListener('click', function() {deleteTodo(todoId)});
+    }
+
+    function deleteTodo(todoId) {
+        TodoFactory.deleteTodo(todoId)
+        closeDeleteModal();
+        init();
+    }
+
+    function addListenerToCloseDelete() {
+        let closeBtn = document.getElementById('delete-todo-modal-cancel-btn');
+        closeBtn.addEventListener('click', closeDeleteModal);
+    }
+
+    function closeDeleteModal() {
+        let deleteModal = document.getElementById('delete-todo-modal');
+        deleteModal.classList.remove('is-active');
     }
 
     function openDetailModal(todo) {
@@ -292,7 +340,6 @@ const DisplayController = (function() {
         sectionDetails.appendChild(p4);
         sectionDetails.appendChild(p5);
 
-        console.log(todo);
         let detailModal = document.getElementById('details-modal');
         detailModal.classList.add('is-active');
     }

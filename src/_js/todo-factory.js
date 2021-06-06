@@ -24,6 +24,10 @@ const TodoFactory = (function() {
         return storage.getTodoItemById(todoId);
     }
 
+    function deleteTodo(todoId) {
+        storage.deleteTodo(todoId);
+    }
+
     class Todo {
         constructor(props) {
             this.title = props.title;
@@ -38,7 +42,8 @@ const TodoFactory = (function() {
     return {
         createTodo,
         getTodosOfAProject,
-        getTodoDetails
+        getTodoDetails,
+        deleteTodo
     }
 
 })();
