@@ -1,61 +1,12 @@
-import {TodoFactory} from './api/todo-api';
-import {ProjectFactory} from './api/project-api';
+import { ProjectDisplayController } from './display-controller/project-display-controller';
+import {CommonDisplayController} from './display-controller/common-display-controller';
+import {TodoDisplayController} from './display-controller/todo-display-controller';
 
 const DisplayController = (function() {
-    function addNewProject() {
-        let projectName = document.getElementById('project-name').value;
-
-        createNewProject(projectName);
-        removeActiveClass('new-project-modal');
-        init();
-    }
 
     function addNewTask() {
-        let title = document.getElementById('title').value;
-        let projectName = document.getElementById('project').value;
-        let description = document.getElementById("details").value;
-        let dueDate = document.getElementById('duedate').value;
-        let priority = document.getElementsByClassName('priority-option');
-        let chosenPrio = '';
-        for(let i = 0; i < priority.length; i++) {
-            if(priority[i].classList.contains('is-selected')) {
-                chosenPrio = priority[i].innerText;
-            }
-        }
-
-        console.log(title, projectName, description, dueDate, chosenPrio);
-        TodoFactory.createTodo(projectName,
-            title, description, dueDate, chosenPrio);
-        removeActiveClass('new-todo-modal');
+        TodoDisplayController.addNewTask();
         init();
-
-    }
-
-
-    function createProjectOption(projectName) {
-        let projectOption = document.createElement('option');
-        projectOption.innerText = projectName;
-        projectOption.value = projectName;
-
-        return projectOption;
-    }
-
-    function addListenerToHomeProject() {
-        let homeProj = document.getElementById('home-project');
-        let homeProjAnchor = document.getElementById('home-project-anchor');
-        addListenerToProjectItem(homeProj, 'Home', homeProjAnchor);
-    }
-
-    function resetActiveProject(newActiveProject) {
-        let activeProjects = document.getElementById('menu-list')
-            .getElementsByClassName('is-active');
-        
-        for(let activeProj of activeProjects) {
-            activeProj.classList.remove('is-active');
-        }
-
-        newActiveProject.classList.add('is-active');
-        console.log(newActiveProject.classList);
     }
 
     function createProjectItem(project) {
@@ -72,7 +23,7 @@ const DisplayController = (function() {
         let trash = document.createElement('i');
         trash.className = 'fa fa-trash';
         delBtn.addEventListener('click', function() {
-            openDeleteModal('delete-project-modal');
+            CommonDisplayController.openDeleteModal('delete-project-modal');
             addListenerToDeleteProject(project['id']);
         });
 
@@ -87,69 +38,22 @@ const DisplayController = (function() {
         projectElem.className = 'project';
         projectElem.appendChild(anchor);
 
-        addListenerToProjectItem(projectElem, project['projectName'], 
-            anchor);
+        ProjectDisplayController.addListenerToProjectItem(projectElem, project['projectName'], 
+            anchor, displayIndividualTodo);
         return projectElem;
     }
 
-    function addListenerToProjectItem(projectElem, projectName, anchor) {
-        projectElem.addEventListener('click', function() {
-            resetTodoContainer();
-            displayIndividualTodo(projectName);
-            resetActiveProject(anchor);
-        });
-            
-    }
-
-    function createNewToDo() {
-        let todoModal = document.getElementById('new-todo-modal');
-        todoModal.classList.add('is-active');
-    }
-
-    function createNewProject() {
-        let projectModal = document.getElementById('new-project-modal');
-        projectModal.classList.add('is-active');
-    }
-
-    function removeActiveClass(elementId) {
-        let modal = document.getElementById(elementId);
-        modal.classList.remove('is-active');
-    }
-
     function addListeners() {
-        addListenerToCreateNewButton();
-        addListenerToCreateProjectButton();
-        addListenerToCancelCreateNewTodoBtn();
-        addListenerToCancelCreateNewProjectBtn();
+        TodoDisplayController.addListenerToCreateNewButton();
+        ProjectDisplayController.addListenerToCreateProjectButton();
+        TodoDisplayController.addListenerToCancelCreateNewTodoBtn();
+        ProjectDisplayController.addListenerToCancelCreateNewProjectBtn();
         addListenerToCreateNewToDoSubmitBtn();
         addListenerToCreateNewProjectSubmitBtn();
-        addListenerToPriorities();
-        addListenerToDisplayModalCloseBtn();
-        addListenerToCloseDelete();
-    }
-
-    function addListenerToCreateNewButton() {
-        let createNewToDoBtn = document.getElementById('create-new-todo-btn');
-        createNewToDoBtn.addEventListener('click', function() {
-            createNewToDo();
-        });
-    }
-
-    function addListenerToCreateProjectButton() {
-        let createNewProjectBtn = document.getElementById('create-new-project-btn');
-        createNewProjectBtn.addEventListener('click', function() {
-            createNewProject();
-        });
-    }
-
-    function addListenerToCancelCreateNewTodoBtn() {
-        let cancelBtn = document.getElementById('cancel-create-todo');
-        cancelBtn.classList.remove('is-active');
-    }
-
-    function addListenerToCancelCreateNewProjectBtn() {
-        let cancelBtn = document.getElementById('cancel-create-project');
-        cancelBtn.classList.remove('is-active');
+        TodoDisplayController.addListenerToPriorities();
+        TodoDisplayController.addListenerToDisplayModalCloseBtn();
+        ProjectDisplayController.addListenerToCloseDeleteProjectModal();
+        TodoDisplayController.addListenerToCloseDeleteTodoModal();
     }
 
     function addListenerToCreateNewToDoSubmitBtn() {
@@ -160,49 +64,15 @@ const DisplayController = (function() {
 
     function addListenerToCreateNewProjectSubmitBtn() {
         let submitBtn = document.getElementById('submit-create-project');
-        submitBtn.addEventListener('click', addNewProject);
+        submitBtn.addEventListener('click', function() {
+            ProjectDisplayController.addNewProject();
+            init();
+        });
         init();
     }
 
-    function addListenerToPriorities() {
-        let priorities = document.getElementsByClassName('priority-option');
-        let highButton = priorities[0];
-        let normalButton = priorities[1];
-        let lowButton = priorities[2];
-        
-        highButton.addEventListener('click', function() {
-            if(!highButton.classList.contains('is-selected')) {
-                highButton.classList.add('is-selected', 'is-success');
-            }
-
-            lowButton.classList.remove('is-selected', 'is-warning');
-            normalButton.classList.remove('is-selected', 'is-info');
-        });
-
-
-        normalButton.addEventListener('click', function() {
-            if(!normalButton.classList.contains('is-selected')) {
-                normalButton.classList.add('is-selected', 'is-info');
-            }
-
-            lowButton.classList.remove('is-selected', 'is-warning');
-            highButton.classList.remove('is-selected', 'is-success');
-        });
-
-
-        lowButton.addEventListener('click', function() {
-            if(!lowButton.classList.contains('is-selected')) {
-                lowButton.classList.add('is-selected', 'is-warning');
-            }
-
-            highButton.classList.remove('is-selected', 'is-success');
-            normalButton.classList.remove('is-selected', 'is-info');
-        });
-
-    }
-
     function displayIndividualTodo(projectName) {
-        let todos = TodoFactory.getTodosOfAProject(projectName);
+        let todos = TodoDisplayController.getTodosOfAProject(projectName);
         
         let parentBlock = document.getElementById('parent-todo-container');
         todos.forEach(todo => {
@@ -266,7 +136,7 @@ const DisplayController = (function() {
         btn.appendChild(icon);
 
         btn.addEventListener('click', function() {
-            openDeleteModal('delete-todo-modal');
+            CommonDisplayController.openDeleteModal('delete-todo-modal');
             addListenerToDeleteTodo(todoId);
         });
 
@@ -282,17 +152,12 @@ const DisplayController = (function() {
         icon.setAttribute('class', 'fa fa-eye');
         btn.appendChild(icon);
 
-        let todo = TodoFactory.getTodoDetails(todoId);
+        let todo = TodoDisplayController.getTodoDetails(todoId);
         btn.addEventListener('click', function() {
-            openDetailModal(todo);
+            TodoDisplayController.openDetailModal(todo);
         });
 
         return btn;
-    }
-
-    function openDeleteModal(modalId) {
-        let deleteModal = document.getElementById(modalId);
-        deleteModal.classList.add('is-active');
     }
 
     function addListenerToDeleteTodo(todoId) {
@@ -309,106 +174,24 @@ const DisplayController = (function() {
     }
 
     function deleteTodo(todoId) {
-        TodoFactory.deleteTodo(todoId)
-        closeDeleteModal('delete-todo-modal');
+        TodoDisplayController.deleteTodo(todoId)
         init();
     }
 
-    function deleteProject(projectId) {
-        ProjectFactory.deleteProject(projectId);
-        closeDeleteModal('delete-project-modal');
-        init();
-    }
-
-    function addListenerToCloseDelete() {
-        let closeBtn = document.getElementById('delete-todo-modal-cancel-btn');
-        closeBtn.addEventListener('click', function() {closeDeleteModal('delete-todo-modal')});
-    }
-
-
-    function addListenerToCloseDelete() {
-        let closeBtn = document.getElementById('delete-project-modal-cancel-btn');
-        closeBtn.addEventListener('click', function() {closeDeleteModal('delete-project-modal')});
-    }
-
-    function closeDeleteModal(modalId) {
-        let deleteModal = document.getElementById(modalId);
-        deleteModal.classList.remove('is-active');
-    }
-
-    function openDetailModal(todo) {
-        let sectionDetails = document.getElementById('section-details');
-        sectionDetails.textContent = '';
-        let p1 = document.createElement('p');
-        p1.innerText = `Title: ${todo['title']}`;
-        let p2 = document.createElement('p');
-        p2.innerText = `Details: ${todo['description']}`;
-        let p3 = document.createElement('p');
-        p3.innerText = `Due Date: ${todo['duedate']}`;
-        let p4 = document.createElement('p');
-        p4.innerText = `Priority: ${todo['priority']}`;
-        let p5 = document.createElement('p');
-        p5.innerText = `Project Name: ${todo['projectName']}`;
-
-        sectionDetails.appendChild(p1);
-        sectionDetails.appendChild(p2);
-        sectionDetails.appendChild(p3);
-        sectionDetails.appendChild(p4);
-        sectionDetails.appendChild(p5);
-
-        let detailModal = document.getElementById('details-modal');
-        detailModal.classList.add('is-active');
-    }
-
-    function addListenerToDisplayModalCloseBtn() {
-        let btn = document.getElementById('detail-modal-close-btn');
-        btn.addEventListener('click', function() {
-            let detailModal = document.getElementById('details-modal');
-            detailModal.classList.remove('is-active');
-            let sectionDetails = document.getElementById('section-details');
-            sectionDetails.textContent = '';
-        });
-    }
-
-    function addNewProject() {
-        let projectName = document.getElementById('project-name').value;
-
-        ProjectFactory.createNewProject(projectName);
-        removeActiveClass('new-project-modal');
-        init();
-    }
-
-    function createNewProject() {
-        let projectModal = document.getElementById('new-project-modal');
-        projectModal.classList.add('is-active');
-    }
-
-    function addListenerToCreateNewProjectSubmitBtn() {
-        let submitBtn = document.getElementById('submit-create-project');
-        submitBtn.addEventListener('click', addNewProject);
-        init();
-    }
 
     function displayProjectList() {
-        let projects = ProjectFactory.getProjects();
+        let projects = ProjectDisplayController.getProjects();
         let projectListElem = document.getElementById('project-list');
         let selectProject = document.getElementById('project');
-        selectProject.appendChild(createProjectOption('Home'));
-        addListenerToHomeProject();
+        selectProject.appendChild(ProjectDisplayController.createProjectOption('Home'));
+        ProjectDisplayController.addListenerToHomeProject(
+            displayIndividualTodo);
 
         projects.forEach((item) => {
             projectListElem.appendChild(createProjectItem(item));
-            selectProject.appendChild(createProjectOption(item['projectName']));
+            selectProject.appendChild(ProjectDisplayController.createProjectOption(item['projectName']));
         });
         
-    }
-
-    function createProjectOption(projectName) {
-        let projectOption = document.createElement('option');
-        projectOption.innerText = projectName;
-        projectOption.value = projectName;
-
-        return projectOption;
     }
 
     function createProjectItem(project) {
@@ -425,7 +208,7 @@ const DisplayController = (function() {
         let trash = document.createElement('i');
         trash.className = 'fa fa-trash';
         delBtn.addEventListener('click', function() {
-            openDeleteModal('delete-project-modal');
+            CommonDisplayController.openDeleteModal('delete-project-modal');
             addListenerToDeleteProject(project['id']);
         });
 
@@ -440,23 +223,9 @@ const DisplayController = (function() {
         projectElem.className = 'project';
         projectElem.appendChild(anchor);
 
-        addListenerToProjectItem(projectElem, project['projectName'], 
-            anchor);
+        ProjectDisplayController.addListenerToProjectItem(projectElem, project['projectName'], 
+            anchor, displayIndividualTodo);
         return projectElem;
-    }
-
-    function openDeleteModal(modalId) {
-        let deleteModal = document.getElementById(modalId);
-        deleteModal.classList.add('is-active');
-    }
-
-
-    function addListenerToProjectItem(projectElem, projectName, anchor) {
-        projectElem.addEventListener('click', function() {
-            resetTodoContainer();
-            displayIndividualTodo(projectName);
-            resetActiveProject(anchor);
-        });       
     }
 
     function addListenerToDeleteProject(projectId) {
@@ -467,54 +236,19 @@ const DisplayController = (function() {
 
 
     function deleteProject(projectId) {
-        ProjectFactory.deleteProject(projectId);
-        closeDeleteModal('delete-project-modal');
+        ProjectDisplayController.deleteProject(projectId);
         init();
     }
 
-    function closeDeleteModal(modalId) {
-        let deleteModal = document.getElementById(modalId);
-        deleteModal.classList.remove('is-active');
-    }
-
-    function addListenerToCreateProjectButton() {
-        let createNewProjectBtn = document.getElementById('create-new-project-btn');
-        createNewProjectBtn.addEventListener('click', function() {
-            createNewProject();
-        });
-    }
-
-
-    function addListenerToCancelCreateNewProjectBtn() {
-        let cancelBtn = document.getElementById('cancel-create-project');
-        cancelBtn.classList.remove('is-active');
-    }
-
-    function resetDisplay() {
-        let projectListElem = document.getElementById('project-list');
-        let selectProject = document.getElementById('project');
-       
-        projectListElem.textContent = '';
-        selectProject.textContent = '';
-        resetTodoContainer();
-    }
-
-    function resetTodoContainer() {
-        let parentBlock = document.getElementById('parent-todo-container');
-        parentBlock.textContent = '';
-    }
-
     function init() {
-        resetDisplay();
+        CommonDisplayController.resetDisplay();
         displayProjectList();
         displayIndividualTodo('Home');
     }
 
     return {
         addListeners,
-        init,
-        createNewToDo,
-        createNewProject,
+        init
     }
 })();
 
