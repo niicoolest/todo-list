@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Todo List</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="The Odin Project Todo List">
+        <meta name="keywords" content="TOP, To-do ListHTML, CSS, JavaScript">
+        <meta name="author" content="Patricia Nicole Opetina">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="shortcut icon" href="images/favicon.ico"/>
+    </head>
+    <body>
+      <div class="container">
+        <div class="todo-container">
+          <div class="contents">
+            <div>
+              <div class="title is-1 font-color-black title-bar">
+                <span>Todo List</span> 
+                <span>
+                  <img src="images/list-status.png" alt="Todo List" class="todo-list-logo">
+                </span>
+  
+                <div class="field is-grouped add-button">
+                  <p class="control">
+                    <button class="button is-link" id="create-new-todo-btn">
+                      Create New Todo
+                    </button>
+                  </p>
+                  <p class="control">
+                    <button class="button" id="create-new-project-btn">
+                      Create New Project
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="todo-list-body">
+              <div class="side-bar">
+                <aside class="menu">
+                  <ul class="menu-list" id="menu-list">
+                    <li id="home-project">
+                      <a class="is-active" id="home-project-anchor">
+                        <span class="icon-text side-bar-item">
+                          <span class="icon">
+                            <i class="fa fa-home"></i>
+                          </span>
+                          <span>Home</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="icon-text side-bar-item">
+                          <span class="icon">
+                            <i class="fa fa-tasks"></i>
+                          </span>
+                          <span>Projects</span>
+                        </span>
+                      </a>
+                      <ul id="project-list">
+                      </ul>
+                    </li>
+                  </ul>
+                </aside>
+              </div>
+              <div class="todo-list-container">
+                <nav class="panel todo-list-panel" id="parent-todo-container">
+                </nav>
+              </div>
+              <div id="new-todo-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                  <form class="box" id="todo-form">
+                    <h2 class="title">Add New Todo</h2>
+                      <div class="field">
+                        <label class="label">Title</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="Title" id="title">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Details</label>
+                        <div class="control">
+                          <textarea class="textarea" placeholder="Details" id="details">
+                          </textarea>
+                        </div>
+                      </div>
+    
+                      <div class="field">
+                        <label class="label">Project</label>
+                        <div class="control">
+                          <div class="select">
+                            <select id="project">
+                              <option value="Home">Home</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="field">
+                        <label class="label">Due Date</label>
+                        <div class="control">
+                          <input class="input" type="date" placeholder="Due Date" id="duedate">
+                        </div>
+                      </div>
+                      
+                      <div class="field">
+                        <label class="label">Priority</label>
+                        <div class="control">
+                          <div class="buttons has-addons" id="priority">
+                            <button class="button is-success is-selected priority-option" 
+                                  type="button">High</button>
+                            <button class="button priority-option" type="button">Normal</button>
+                            <button class="button priority-option" type="button">Low</button>
+                          </div>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link" id="submit-create-todo" type="button">
+                            Submit
+                          </button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light" id="cancel-create-todo">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                  </form>
+
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+              </div>
+
+              <div id="new-project-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                  <form class="box" id="project-form">
+                    <h2 class="title">Add New Project</h2>
+                      <div class="field">
+                        <label class="label">Project Name</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="Project Name" id="project-name">
+                        </div>
+                      </div>
+                      <br>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link" type="button" id="submit-create-project">
+                            Submit
+                          </button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light" id="cancel-create-project">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                  </form>
+
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+              </div>
+
+              <div class="modal" id="details-modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Details</p>
+                    <button class="delete" aria-label="close" 
+                            id="detail-modal-close-btn">
+                    </button>
+                  </header>
+                  <section class="modal-card-body" id="section-details">
+                  </section>
+                </div>
+              </div>
+
+              <div class="modal" id="delete-todo-modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Delete Todo?</p>
+                    <button class="delete" aria-label="close"></button>
+                  </header>
+                  <footer class="modal-card-foot">
+                    <button class="button is-danger" id="delete-todo-modal-btn" type="button">
+                      Delete
+                    </button>
+                    <button class="button" id="delete-todo-modal-cancel-btn" type="button">
+                      Cancel
+                    </button>
+                  </footer>
+                </div>
+              </div>
+
+
+              <div class="modal" id="delete-project-modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Delete Project? </p>
+                    <button class="delete" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body">
+                    All todos under this project will also be deleted!
+                  </section>
+                  <footer class="modal-card-foot">
+                    <button class="button is-danger" id="delete-project-modal-btn" type="button">
+                      Delete
+                    </button>
+                    <button class="button" id="delete-project-modal-cancel-btn" type="button">
+                      Cancel
+                    </button>
+                  </footer>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="main.js"></script>
+    </body>
+</html>

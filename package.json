@@ -1,0 +1,31 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "description": "Entry to The Odin Project To-do list Exercise",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatrixienicolieopetina/todo-list.git"
+  },
+  "keywords": [
+    "todo",
+    "javascript",
+    "html",
+    "css",
+    "odin"
+  ],
+  "author": "Patricia Nicole Opetina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fatrixienicolieopetina/todo-list/issues"
+  },
+  "homepage": "https://github.com/fatrixienicolieopetina/todo-list#readme",
+  "devDependencies": {
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
