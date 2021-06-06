@@ -93,3 +93,7 @@ body {
     color: black;
     background-color: white;
 }
+
+.float-right {
+    float: right;
+}

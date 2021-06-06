@@ -1,4 +1,20 @@
+import { datenow, id } from "./util";
+
 const storage = (() => {
+
+    const EXAMPLE_TODO = {
+        id: id(),
+        projectName: 'Home',
+        description: 'Read about The Odin Project curriculum',
+        title: 'Check out TOP',
+        duedate: datenow(),
+        priority: 'Low'
+    }
+
+    const EXAMPLE_PROJECT = {
+        id: id(),
+        projectName: 'Special Project'
+    }
 
     let storage;
 
@@ -6,11 +22,11 @@ const storage = (() => {
         storage = window.localStorage;
 
         if(storage.getItem('projects') == null) {
-            storage.setItem('projects', '[]');
+            storage.setItem('projects', JSON.stringify(new Array(EXAMPLE_PROJECT)));
         }
 
         if(storage.getItem('todos') == null) {
-            storage.setItem('todos', '[]');
+            storage.setItem('todos', JSON.stringify(new Array(EXAMPLE_TODO)));
         }
     }
 
@@ -45,10 +61,19 @@ const storage = (() => {
         return null;
     }
 
+    function deleteProject(projectId) {
+        let projects = JSON.parse(storage.getItem('projects'));
+        let todos = JSON.parse(storage.getItem('todos'));
+
+        let toBeDeleted = projects.filter(proj => proj['id'] == projectId);
+        let updatedProjects = projects.filter(proj => proj['id'] != projectId);
+        let updatedTodos = todos.filter(todo => todo['projectName'] != toBeDeleted[0]['projectName']);
+        storage.setItem('todos', JSON.stringify(updatedTodos));
+        storage.setItem('projects', JSON.stringify(updatedProjects));
+    }
+
     function deleteTodo(todoId) {
         let todos = JSON.parse(storage.getItem('todos'));
-        console.log(todoId);
-        console.log(todos);
         let newTodoList = todos.filter(todo => todo['id'] != todoId);
         storage.setItem('todos', JSON.stringify(newTodoList));
     }
@@ -61,7 +86,8 @@ const storage = (() => {
         getProjectItems,
         getTodoItemsOfAProject,
         getTodoItemById,
-        deleteTodo
+        deleteTodo,
+        deleteProject
     }
 
 })();

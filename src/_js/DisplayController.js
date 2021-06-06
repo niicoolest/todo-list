@@ -1,11 +1,11 @@
-import {TodoFactory} from './todo-factory';
-import {ProjectFactory} from './project-factory';
+import {TodoFactory} from './api/todo-api';
+import {ProjectFactory} from './api/project-api';
 
 const DisplayController = (function() {
     function addNewProject() {
         let projectName = document.getElementById('project-name').value;
 
-        ProjectFactory.createNewProject(projectName);
+        createNewProject(projectName);
         removeActiveClass('new-project-modal');
         init();
     }
@@ -31,19 +31,6 @@ const DisplayController = (function() {
 
     }
 
-    function displayProjectList() {
-        let projects = ProjectFactory.getProjects();
-        let projectListElem = document.getElementById('project-list');
-        let selectProject = document.getElementById('project');
-        selectProject.appendChild(createProjectOption('Home'));
-        addListenerToHomeProject();
-
-        projects.forEach((item) => {
-            projectListElem.appendChild(createProjectItem(item));
-            selectProject.appendChild(createProjectOption(item['projectName']));
-        });
-        
-    }
 
     function createProjectOption(projectName) {
         let projectOption = document.createElement('option');
@@ -74,9 +61,30 @@ const DisplayController = (function() {
     function createProjectItem(project) {
         let projectElem = document.createElement('li');
         let anchor = document.createElement('a');
+        let divInsideAnchor = document.createElement('div');
+        let span1 = document.createElement('span');
+        span1.innerText = project['projectName'];
+        let span2 = document.createElement('span');
+        let delBtn = document.createElement('button');
+        delBtn.className = 'float-right';
+        delBtn.id = project['id'];
+
+        let trash = document.createElement('i');
+        trash.className = 'fa fa-trash';
+        delBtn.addEventListener('click', function() {
+            openDeleteModal('delete-project-modal');
+            addListenerToDeleteProject(project['id']);
+        });
+
+        delBtn.appendChild(trash);
+        span2.appendChild(delBtn);
+
+        divInsideAnchor.appendChild(span1);
+        divInsideAnchor.appendChild(span2);
+
+        anchor.appendChild(divInsideAnchor);
+
         projectElem.className = 'project';
-        projectElem.id = project['id'];
-        anchor.innerText = project['projectName'];
         projectElem.appendChild(anchor);
 
         addListenerToProjectItem(projectElem, project['projectName'], 
@@ -216,26 +224,30 @@ const DisplayController = (function() {
             todoItemPanel.classList.add('todo-item-yellow');
         }
 
-        let inputCheckBox = document.createElement('input');
-        inputCheckBox.setAttribute('type', 'checkbox');
+        let inputCheckBox = document.createElement('i');
+        inputCheckBox.setAttribute('class', 'fa fa-check');
 
         let labelItem = document.createElement('label');
 
         let todoTitleElem = document.createElement('span');
-        todoTitleElem.innerText = `${title} due at ${dueDate}`;
+        todoTitleElem.className = 'title is-3';
+        todoTitleElem.innerText = `  ${title}\n`;
+
+        let dueDateElem = document.createElement('span');
+        dueDateElem.innerText = `Due at ${dueDate}`;
+
         labelItem.appendChild(inputCheckBox);
         labelItem.appendChild(todoTitleElem);
+        labelItem.appendChild(dueDateElem);
         
 
         let buttonGroup = document.createElement('div');
         buttonGroup.setAttribute('class', 'field is-grouped add-button buttons are-small');
         
         let eyeButton = createDetailsButton(id);
-        let editButton = createEditButtonItem('fa fa-edit');
         let trashButton = createDeleteTodoBtn(id);
 
         buttonGroup.appendChild(eyeButton);
-        buttonGroup.appendChild(editButton);
         buttonGroup.appendChild(trashButton);
 
         todoItemPanel.appendChild(labelItem);
@@ -243,19 +255,6 @@ const DisplayController = (function() {
 
         return todoItemPanel;
     }
-
-    function createEditButtonItem(iconClass) {
-        let btn = document.createElement('button');
-        btn.className = 'button';
-        btn.setAttribute('type', 'button');
-
-        let icon = document.createElement('i');
-        icon.setAttribute('class', iconClass);
-        btn.appendChild(icon);
-
-        return btn;
-    }
-
 
     function createDeleteTodoBtn(todoId) {
         let btn = document.createElement('button');
@@ -266,9 +265,8 @@ const DisplayController = (function() {
         icon.setAttribute('class', 'fa fa-trash');
         btn.appendChild(icon);
 
-        console.log('heyo');
         btn.addEventListener('click', function() {
-            openDeleteModal();
+            openDeleteModal('delete-todo-modal');
             addListenerToDeleteTodo(todoId);
         });
 
@@ -292,9 +290,8 @@ const DisplayController = (function() {
         return btn;
     }
 
-    function openDeleteModal() {
-        console.log('i came here')
-        let deleteModal = document.getElementById('delete-todo-modal');
+    function openDeleteModal(modalId) {
+        let deleteModal = document.getElementById(modalId);
         deleteModal.classList.add('is-active');
     }
 
@@ -304,19 +301,38 @@ const DisplayController = (function() {
         deleteTodoBtn.addEventListener('click', function() {deleteTodo(todoId)});
     }
 
+
+    function addListenerToDeleteProject(projectId) {
+        let deleteProjectBtn = document.getElementById('delete-project-modal-btn');
+        deleteProjectBtn.removeEventListener('click', function() {deleteProject(projectId)});
+        deleteProjectBtn.addEventListener('click', function() {deleteProject(projectId)});
+    }
+
     function deleteTodo(todoId) {
         TodoFactory.deleteTodo(todoId)
-        closeDeleteModal();
+        closeDeleteModal('delete-todo-modal');
+        init();
+    }
+
+    function deleteProject(projectId) {
+        ProjectFactory.deleteProject(projectId);
+        closeDeleteModal('delete-project-modal');
         init();
     }
 
     function addListenerToCloseDelete() {
         let closeBtn = document.getElementById('delete-todo-modal-cancel-btn');
-        closeBtn.addEventListener('click', closeDeleteModal);
+        closeBtn.addEventListener('click', function() {closeDeleteModal('delete-todo-modal')});
     }
 
-    function closeDeleteModal() {
-        let deleteModal = document.getElementById('delete-todo-modal');
+
+    function addListenerToCloseDelete() {
+        let closeBtn = document.getElementById('delete-project-modal-cancel-btn');
+        closeBtn.addEventListener('click', function() {closeDeleteModal('delete-project-modal')});
+    }
+
+    function closeDeleteModal(modalId) {
+        let deleteModal = document.getElementById(modalId);
         deleteModal.classList.remove('is-active');
     }
 
@@ -352,6 +368,126 @@ const DisplayController = (function() {
             let sectionDetails = document.getElementById('section-details');
             sectionDetails.textContent = '';
         });
+    }
+
+    function addNewProject() {
+        let projectName = document.getElementById('project-name').value;
+
+        ProjectFactory.createNewProject(projectName);
+        removeActiveClass('new-project-modal');
+        init();
+    }
+
+    function createNewProject() {
+        let projectModal = document.getElementById('new-project-modal');
+        projectModal.classList.add('is-active');
+    }
+
+    function addListenerToCreateNewProjectSubmitBtn() {
+        let submitBtn = document.getElementById('submit-create-project');
+        submitBtn.addEventListener('click', addNewProject);
+        init();
+    }
+
+    function displayProjectList() {
+        let projects = ProjectFactory.getProjects();
+        let projectListElem = document.getElementById('project-list');
+        let selectProject = document.getElementById('project');
+        selectProject.appendChild(createProjectOption('Home'));
+        addListenerToHomeProject();
+
+        projects.forEach((item) => {
+            projectListElem.appendChild(createProjectItem(item));
+            selectProject.appendChild(createProjectOption(item['projectName']));
+        });
+        
+    }
+
+    function createProjectOption(projectName) {
+        let projectOption = document.createElement('option');
+        projectOption.innerText = projectName;
+        projectOption.value = projectName;
+
+        return projectOption;
+    }
+
+    function createProjectItem(project) {
+        let projectElem = document.createElement('li');
+        let anchor = document.createElement('a');
+        let divInsideAnchor = document.createElement('div');
+        let span1 = document.createElement('span');
+        span1.innerText = project['projectName'];
+        let span2 = document.createElement('span');
+        let delBtn = document.createElement('button');
+        delBtn.className = 'float-right';
+        delBtn.id = project['id'];
+
+        let trash = document.createElement('i');
+        trash.className = 'fa fa-trash';
+        delBtn.addEventListener('click', function() {
+            openDeleteModal('delete-project-modal');
+            addListenerToDeleteProject(project['id']);
+        });
+
+        delBtn.appendChild(trash);
+        span2.appendChild(delBtn);
+
+        divInsideAnchor.appendChild(span1);
+        divInsideAnchor.appendChild(span2);
+
+        anchor.appendChild(divInsideAnchor);
+
+        projectElem.className = 'project';
+        projectElem.appendChild(anchor);
+
+        addListenerToProjectItem(projectElem, project['projectName'], 
+            anchor);
+        return projectElem;
+    }
+
+    function openDeleteModal(modalId) {
+        let deleteModal = document.getElementById(modalId);
+        deleteModal.classList.add('is-active');
+    }
+
+
+    function addListenerToProjectItem(projectElem, projectName, anchor) {
+        projectElem.addEventListener('click', function() {
+            resetTodoContainer();
+            displayIndividualTodo(projectName);
+            resetActiveProject(anchor);
+        });       
+    }
+
+    function addListenerToDeleteProject(projectId) {
+        let deleteProjectBtn = document.getElementById('delete-project-modal-btn');
+        deleteProjectBtn.removeEventListener('click', function() {deleteProject(projectId)});
+        deleteProjectBtn.addEventListener('click', function() {deleteProject(projectId)});
+    }
+
+
+    function deleteProject(projectId) {
+        ProjectFactory.deleteProject(projectId);
+        closeDeleteModal('delete-project-modal');
+        init();
+    }
+
+    function closeDeleteModal(modalId) {
+        let deleteModal = document.getElementById(modalId);
+        deleteModal.classList.remove('is-active');
+    }
+
+    function addListenerToCreateProjectButton() {
+        let createNewProjectBtn = document.getElementById('create-new-project-btn');
+        createNewProjectBtn.addEventListener('click', function() {
+            createNewProject();
+        });
+    }
+
+
+    function addListenerToCancelCreateNewProjectBtn() {
+        let cancelBtn = document.getElementById('cancel-create-project');
+        cancelBtn.classList.remove('is-active');
     }
 
     function resetDisplay() {

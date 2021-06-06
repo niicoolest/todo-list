@@ -1,5 +1,5 @@
-import {storage} from './storage';
-import { id } from './util';
+import {storage} from '../storage';
+import { id } from '../util';
 
 const TodoFactory = (function() {
 

@@ -1,5 +1,5 @@
-import {storage} from './storage';
-import {id} from './util';
+import {storage} from '../storage';
+import {id} from '../util';
 
 const ProjectFactory = (function() {
 
@@ -16,6 +16,10 @@ const ProjectFactory = (function() {
         return storage.getProjectItems();
     }
 
+    function deleteProject(projectId) {
+        storage.deleteProject(projectId);
+    }
+
     class TodoProject {
         constructor(props) {
             this.projectName = props.projectName;
@@ -25,7 +29,8 @@ const ProjectFactory = (function() {
 
     return {
         createNewProject,
-        getProjects
+        getProjects,
+        deleteProject
     }
 
 })();
