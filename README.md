@@ -1,6 +1,6 @@
 # Todo List ✍️
 #### Entry to TOP's todo list exercise
-#### Live preview can be found <a href="https://fatrixienicolieopetina.github.io/todo-list/">here</a>
+#### Live preview can be found <a href="https://niicoolest.github.io/todo-list/">here</a>
 
 ### About 👨‍🏫
 The todo list have projects or separate lists of todos. When a user first opens the app, there is some sort of ‘default’ project called 'Home' to which all of the todos are put. Users can create new projects and choose which project their todos go into. **localStorage** is used to save user’s projects and todos between sessions.
